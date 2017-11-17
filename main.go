@@ -22,6 +22,7 @@ type Entity struct {
 	fields  []Field
 }
 
+var fields map[string]Field
 var entities map[string]Entity
 
 func printError(err error) {
@@ -31,6 +32,7 @@ func printError(err error) {
 
 func main() {
 	entities = make(map[string]Entity)
+	fields = make(map[string]Field)
 
 	r, _ := regexp.Compile("(field_data_.+)")
 
@@ -83,17 +85,21 @@ func processField(db *sql.DB, table string) {
 
 		rows.Scan(&entity_type, &bundle_name)
 
-		if val, ok := entities[entity_type]; ok {
-			val.addBundle(bundle_name)
-			entities[entity_type] = val
-		} else {
-			bundles := make([]string, 1)
-			bundles[0] = bundle_name
-			entity := Entity{table: entity_type, bundles: bundles}
+		val, exists := entities[entity_type]
 
-			entities[entity_type] = entity
+		if !exists {
+			val = createEntity(entity_type)
 		}
+
+		val.addBundle(bundle_name)
+		entities[entity_type] = val
 	}
+}
+
+func createEntity(entity_name string) Entity {
+	bundles := make([]string, 0)
+	entity := Entity{table: entity_name, bundles: bundles}
+	return entity
 }
 
 func (entity *Entity) hasBundle(bundle string) bool {
