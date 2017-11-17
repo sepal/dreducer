@@ -7,8 +7,22 @@ import (
 	"github.com/mitchellh/colorstring"
 	"os"
 	"regexp"
-	"container/list"
 )
+
+type Field struct {
+	table       string
+	name        string
+	entity_type []Entity
+	bundle      []string
+}
+
+type Entity struct {
+	table   string
+	bundles []string
+	fields  []Field
+}
+
+var entities map[string]Entity
 
 func printError(err error) {
 	fmt.Println(colorstring.Color("[red]" + err.Error()))
@@ -16,7 +30,7 @@ func printError(err error) {
 }
 
 func main() {
-	fields := list.New()
+	entities = make(map[string]Entity)
 
 	r, _ := regexp.Compile("(field_data_.+)")
 
@@ -25,8 +39,6 @@ func main() {
 	if err != nil {
 		printError(err)
 	}
-
-	processField(db, "field_data_field_job_geocomplete")
 
 	rows, err := db.Query("SHOW TABLES")
 
@@ -42,7 +54,14 @@ func main() {
 		}
 
 		if r.MatchString(table) {
-			fields.PushBack(table)
+			processField(db, table)
+		}
+	}
+
+	for k, entity := range entities {
+		println(k)
+		for _, bundle := range entity.bundles {
+			println("- " + bundle)
 		}
 	}
 
@@ -56,15 +75,38 @@ func processField(db *sql.DB, table string) {
 		printError(err)
 	}
 
-	rows.Next()
-	var (
-		entity string
-		bundle string
-	)
+	for rows.Next() {
+		var (
+			entity_type string
+			bundle_name string
+		)
 
-	rows.Scan(&entity, &bundle)
+		rows.Scan(&entity_type, &bundle_name)
 
-	println(entity)
-	println(bundle)
+		if val, ok := entities[entity_type]; ok {
+			val.addBundle(bundle_name)
+			entities[entity_type] = val
+		} else {
+			bundles := make([]string, 1)
+			bundles[0] = bundle_name
+			entity := Entity{table: entity_type, bundles: bundles}
 
+			entities[entity_type] = entity
+		}
+	}
+}
+
+func (entity *Entity) hasBundle(bundle string) bool {
+	for _, v := range entity.bundles {
+		if v == bundle {
+			return true
+		}
+	}
+	return false
+}
+
+func (entity *Entity) addBundle(bundle string) {
+	if !entity.hasBundle(bundle) {
+		entity.bundles = append(entity.bundles, bundle)
+	}
 }
