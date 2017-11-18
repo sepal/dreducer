@@ -5,17 +5,23 @@ import (
 	"github.com/graphql-go/relay"
 	"github.com/sepal/dreducer/Scanner"
 	"github.com/sepal/dreducer/models"
+	"golang.org/x/net/context"
 )
 
 var entityType, bundleType, fieldType, fieldFieldType *graphql.Object
 var queryType *graphql.Object
 var Schema graphql.Schema
 
+func tableId(obj interface{}, info graphql.ResolveInfo, ctx context.Context)(string, error) {
+	e:= obj.(models.Table)
+	return e.GetName(), nil
+}
+
 func setupSchema(db *Scanner.DrupalDB) {
 	fieldFieldType  = graphql.NewObject(graphql.ObjectConfig{
 		Name: "FieldField",
 		Fields: graphql.Fields{
-			"id": relay.GlobalIDField("FieldField", nil),
+			"id": relay.GlobalIDField("FieldField", tableId),
 			"name": &graphql.Field{
 				Type: graphql.String,
 			},
@@ -25,7 +31,7 @@ func setupSchema(db *Scanner.DrupalDB) {
 	fieldType = graphql.NewObject(graphql.ObjectConfig{
 		Name: "Field",
 		Fields: graphql.Fields{
-			"id": relay.GlobalIDField("Field", nil),
+			"id": relay.GlobalIDField("Field", tableId),
 			"name": &graphql.Field{
 				Type: graphql.String,
 			},
@@ -40,7 +46,7 @@ func setupSchema(db *Scanner.DrupalDB) {
 	bundleType = graphql.NewObject(graphql.ObjectConfig{
 		Name: "EntityType",
 		Fields: graphql.Fields{
-			"id": relay.GlobalIDField("EntityType", nil),
+			"id": relay.GlobalIDField("EntityType", tableId),
 			"name": &graphql.Field{
 				Type: graphql.String,
 			},
@@ -56,7 +62,7 @@ func setupSchema(db *Scanner.DrupalDB) {
 		Name:        "entity",
 		Description: "A drupal entity.",
 		Fields: graphql.Fields{
-			"id": relay.GlobalIDField("entity", nil),
+			"id": relay.GlobalIDField("entity", tableId),
 			"name": &graphql.Field{
 				Type: graphql.String,
 			},

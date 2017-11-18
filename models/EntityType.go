@@ -11,6 +11,10 @@ func CreateEntityType(e *Entity, name string) (EntityType) {
 	return EntityType{entity: e, Name: name, Fields: fields}
 }
 
+func (t *EntityType) GetName() string  {
+	return t.Name
+}
+
 func (t *EntityType) equals(c *EntityType) bool {
 	return t.Name == c.Name && t.entity.Equals(c.entity)
 }

@@ -18,6 +18,10 @@ func CreateField(field_table string) Field {
 	return Field{table: field_table, Name: name, entities: entities, Fields:fields}
 }
 
+func (f *Field) GetName() string  {
+	return f.Name
+}
+
 func (field *Field) HasEntityType(t *EntityType) bool {
 	for _, e := range field.entities {
 		if e.equals(t) {

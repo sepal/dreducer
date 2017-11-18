@@ -13,6 +13,10 @@ func CreateEntity(entity_name string) Entity {
 	return Entity{Name: entity_name, Types: bundles, Fields: fields}
 }
 
+func (e *Entity) GetName() string  {
+	return e.Name
+}
+
 func (entity *Entity) HasType(name string) bool {
 	for _, v := range entity.Types {
 		if v.Name == name {
