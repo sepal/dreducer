@@ -48,7 +48,7 @@ func main() {
 		}
 	}
 
-	node, _ := entities["node"]
+	node, _ := entities["field_collection_item"]
 	node.Show()
 
 	geocomplete, _ := fields["field_data_field_resume_geocomplete"]
@@ -79,8 +79,6 @@ func processField(db *sql.DB, table string) {
 
 		rows.Scan(&entity_type, &bundle_name)
 
-		field.AddBundle(bundle_name)
-
 		entity, exists := entities[entity_type]
 
 		if !exists {
@@ -88,9 +86,18 @@ func processField(db *sql.DB, table string) {
 			entity = &e
 		}
 
-		entity.AddBundle(bundle_name)
+		t, exists := entity.GetType(bundle_name)
+
+		if !exists {
+			entity.AddType(bundle_name)
+			t, _ = entity.GetType(bundle_name)
+		}
+
+		field.AddEntityType(t)
+
 		entity.AddField(field)
-		field.AddEntity(entity)
+
+
 
 		entities[entity_type] = entity
 	}

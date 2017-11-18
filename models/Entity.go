@@ -1,31 +1,41 @@
 package models
 
 type Entity struct {
-	table   string
-	bundles []string
-	fields  []*Field
+	table  string
+	types  []*EntityType
+	fields []*Field
 }
 
 
 func CreateEntity(entity_name string) Entity {
-	bundles := make([]string, 0)
+	bundles := make([]*EntityType, 0)
 	fields := make([]*Field, 0)
-	return Entity{table: entity_name, bundles: bundles, fields: fields}
+	return Entity{table: entity_name, types: bundles, fields: fields}
 }
 
-func (entity *Entity) HasBundle(bundle string) bool {
-	for _, v := range entity.bundles {
-		if v == bundle {
+func (entity *Entity) HasType(name string) bool {
+	for _, v := range entity.types {
+		if v.name == name {
 			return true
 		}
 	}
 	return false
 }
 
-func (entity *Entity) AddBundle(bundle string) {
-	if !entity.HasBundle(bundle) {
-		entity.bundles = append(entity.bundles, bundle)
+func (entity *Entity) AddType(name string) {
+	if !entity.HasType(name) {
+		t := CreateEntityType(entity, name)
+		entity.types = append(entity.types, &t)
 	}
+}
+
+func (e *Entity) GetType(name string) (*EntityType, bool) {
+	for _, t := range e.types {
+		if t.name == name {
+			return t, true
+		}
+	}
+	return nil, false
 }
 
 func (entity *Entity) HasField(field *Field) bool {
@@ -47,8 +57,8 @@ func (entity *Entity) Show() {
 	println("Entity: " + entity.table)
 	println("---")
 	println("types:")
-	for _, bundle := range entity.bundles {
-		println("- " + bundle)
+	for _, t := range entity.types {
+		println("- " + t.name)
 	}
 
 	println("fields:")
