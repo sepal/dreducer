@@ -50,9 +50,9 @@ func (entity *Entity) HasField(field *Field) bool {
 func (entity *Entity) AddField(field *Field, name string) {
 	if !entity.HasField(field) {
 		entity.fields = append(entity.fields, field)
-		t, _ := entity.GetType(name)
-		t.addField(field)
 	}
+	t, _ := entity.GetType(name)
+	t.addField(field)
 }
 
 func (entity *Entity) Show() {
