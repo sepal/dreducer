@@ -47,9 +47,11 @@ func (entity *Entity) HasField(field *Field) bool {
 	return false
 }
 
-func (entity *Entity) AddField(field *Field) {
+func (entity *Entity) AddField(field *Field, name string) {
 	if !entity.HasField(field) {
 		entity.fields = append(entity.fields, field)
+		t, _ := entity.GetType(name)
+		t.addField(field)
 	}
 }
 
@@ -59,11 +61,12 @@ func (entity *Entity) Show() {
 	println("types:")
 	for _, t := range entity.types {
 		println("- " + t.name)
-	}
-
-	println("fields:")
-	for _, f := range entity.fields {
-		println("- " + f.name)
+		if len(t.fields) > 0 {
+			println("  fields:")
+			for _, f := range t.fields {
+				println("  - " + f.name)
+			}
+		}
 	}
 	println("")
 }

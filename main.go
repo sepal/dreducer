@@ -48,7 +48,7 @@ func main() {
 		}
 	}
 
-	node, _ := entities["field_collection_item"]
+	node, _ := entities["node"]
 	node.Show()
 
 	geocomplete, _ := fields["field_data_field_resume_geocomplete"]
@@ -95,9 +95,7 @@ func processField(db *sql.DB, table string) {
 
 		field.AddEntityType(t)
 
-		entity.AddField(field)
-
-
+		entity.AddField(field, bundle_name)
 
 		entities[entity_type] = entity
 	}
