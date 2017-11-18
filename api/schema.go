@@ -4,6 +4,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/relay"
 	"github.com/sepal/dreducer/Scanner"
+	"github.com/sepal/dreducer/models"
 )
 
 var entityType, bundleType, fieldType, fieldFieldType *graphql.Object
@@ -75,8 +76,8 @@ func setupSchema(db *Scanner.DrupalDB) {
 	queryType = graphql.NewObject(graphql.ObjectConfig{
 		Name: "Query",
 		Fields: graphql.Fields{
-			"entity": &graphql.Field{
-				Type: entityType,
+			"entities": &graphql.Field{
+				Type: graphql.NewList(entityType),
 				Args: graphql.FieldConfigArgument{
 					"name": &graphql.ArgumentConfig{
 						Description: "If ommitted, returns all entities " +
@@ -85,8 +86,16 @@ func setupSchema(db *Scanner.DrupalDB) {
 					},
 				},
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					name, _ := p.Args["name"].(string)
-					e, _ := db.GetEntity(name)
+					name, exists := p.Args["name"].(string)
+
+					if exists {
+						e, _ := db.GetEntity(name)
+						entities := make([]*models.Entity, 1)
+						entities[0] = e
+						return entities, nil
+					}
+
+					e := db.All()
 					return e, nil
 				},
 			},
