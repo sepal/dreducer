@@ -3,7 +3,7 @@ package models
 type Entity struct {
 	Name   string		 `json:"name"`
 	Types  []*EntityType `json:"types"`
-	Fields []*Field		 `json:"fields"`
+	Fields []*Field		 `json:"Fields"`
 }
 
 
@@ -56,17 +56,17 @@ func (entity *Entity) AddField(field *Field, name string) {
 }
 
 func (entity *Entity) Show() {
-	println("Entity: " + entity.Name)
+	println("entity: " + entity.Name)
 	println("---")
 	println("Types:")
 	for _, t := range entity.Types {
 		println("- " + t.Name)
-		if len(t.fields) > 0 {
+		if len(t.Fields) > 0 {
 			println("  Fields:")
-			for _, f := range t.fields {
+			for _, f := range t.Fields {
 				println("  - " + f.Name)
-				if f.EntityRef != nil {
-					for _, ef := range f.EntityRef.fields {
+				if f.entityRef != nil {
+					for _, ef := range f.entityRef.Fields {
 						println("    - " + ef.Name)
 					}
 				}

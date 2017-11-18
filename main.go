@@ -28,7 +28,7 @@ func main() {
 	//entity, exists := db.GetEntity(name)
 	////entity, exists := db.GetEntityType(name, "resume")
 	//if !exists {
-	//	fmt.Printf("Entity %s does not exist.\n", name)
+	//	fmt.Printf("entity %s does not exist.\n", name)
 	//	os.Exit(1)
 	//}
 	//entity.Show()

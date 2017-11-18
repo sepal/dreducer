@@ -6,12 +6,22 @@ import (
 	"github.com/sepal/dreducer/Scanner"
 )
 
-var entityType, bundleType *graphql.Object
+var entityType, bundleType, fieldType *graphql.Object
 var queryType *graphql.Object
 var Schema graphql.Schema
 
 
 func setupSchema(db *Scanner.DrupalDB) {
+
+	fieldType = graphql.NewObject(graphql.ObjectConfig{
+		Name: "Field",
+		Fields: graphql.Fields{
+			"id": relay.GlobalIDField("Field", nil),
+			"name": &graphql.Field{
+				Type: graphql.String,
+			},
+		},
+	})
 
 	bundleType = graphql.NewObject(graphql.ObjectConfig{
 		Name: "EntityType",
@@ -20,20 +30,30 @@ func setupSchema(db *Scanner.DrupalDB) {
 			"name": &graphql.Field{
 				Type: graphql.String,
 			},
+			"fields": &graphql.Field{
+				Type: &graphql.List{
+					OfType: fieldType,
+				},
+			},
 		},
 	})
 
 	entityType = graphql.NewObject(graphql.ObjectConfig{
-		Name: "Entity",
+		Name: "entity",
 		Description: "A drupal entity.",
 		Fields: graphql.Fields{
-			"id": relay.GlobalIDField("Entity", nil),
+			"id": relay.GlobalIDField("entity", nil),
 			"name": &graphql.Field{
 				Type: graphql.String,
 			},
 			"types": &graphql.Field{
 				Type: &graphql.List{
 					OfType:bundleType,
+				},
+			},
+			"fields": &graphql.Field{
+				Type: &graphql.List{
+					OfType:fieldType,
 				},
 			},
 		},

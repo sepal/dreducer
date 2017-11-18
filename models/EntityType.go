@@ -3,12 +3,12 @@ package models
 type EntityType struct {
 	entity *Entity  `json:"entity"`
 	Name   string   `json:"name"`
-	fields []*Field `json:"fields"`
+	Fields []*Field `json:"fields"`
 }
 
 func CreateEntityType(e *Entity, name string) (EntityType) {
 	fields := make([]*Field, 0)
-	return EntityType{entity: e, Name: name, fields: fields}
+	return EntityType{entity: e, Name: name, Fields: fields}
 }
 
 func (t *EntityType) equals(c *EntityType) bool {
@@ -16,7 +16,7 @@ func (t *EntityType) equals(c *EntityType) bool {
 }
 
 func (t *EntityType) hasFields(field *Field) bool {
-	for _, f := range t.fields {
+	for _, f := range t.Fields {
 		if f.Equals(field) {
 			return true
 		}
@@ -27,17 +27,17 @@ func (t *EntityType) hasFields(field *Field) bool {
 
 func (t *EntityType) addField(f *Field) {
 	if !t.hasFields(f) {
-		t.fields = append(t.fields, f)
+		t.Fields = append(t.Fields, f)
 	}
 }
 func (t *EntityType) Show() {
-	println("Entity: " + t.entity.Name + ":" + t.Name)
+	println("entity: " + t.entity.Name + ":" + t.Name)
 	println("---")
 	println("Fields: ")
-	for _, f := range t.fields {
+	for _, f := range t.Fields {
 		println("- " + f.Name)
-		if f.EntityRef != nil {
-			for _, ef := range f.EntityRef.fields {
+		if f.entityRef != nil {
+			for _, ef := range f.entityRef.Fields {
 				println("  - " + ef.Name)
 			}
 		}
