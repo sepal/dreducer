@@ -6,6 +6,7 @@ import (
 	"github.com/mitchellh/colorstring"
 	"os"
 	"github.com/sepal/dreducer/Scanner"
+	"github.com/sepal/dreducer/api"
 )
 
 func printError(err error) {
@@ -20,13 +21,15 @@ func main() {
 		printError(err)
 	}
 
-	name := "profile2"
+	api.InitServer(&db)
 
-	entity, exists := db.GetEntity(name)
-	//entity, exists := db.GetEntityType(name, "resume")
-	if !exists {
-		fmt.Printf("Entity %s does not exist.\n", name)
-		os.Exit(1)
-	}
-	entity.Show()
+	//name := "profile2"
+	//
+	//entity, exists := db.GetEntity(name)
+	////entity, exists := db.GetEntityType(name, "resume")
+	//if !exists {
+	//	fmt.Printf("Entity %s does not exist.\n", name)
+	//	os.Exit(1)
+	//}
+	//entity.Show()
 }

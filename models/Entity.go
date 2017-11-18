@@ -1,9 +1,9 @@
 package models
 
 type Entity struct {
-	Name   string
-	Types  []*EntityType
-	Fields []*Field
+	Name   string		 `json:"name"`
+	Types  []*EntityType `json:"types"`
+	Fields []*Field		 `json:"fields"`
 }
 
 

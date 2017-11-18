@@ -1,21 +1,21 @@
 package models
 
 type EntityType struct {
-	entity *Entity
-	Name   string
-	fields []*Field
+	entity *Entity  `json:"entity"`
+	Name   string   `json:"name"`
+	fields []*Field `json:"fields"`
 }
 
 func CreateEntityType(e *Entity, name string) (EntityType) {
 	fields := make([]*Field, 0)
-	return EntityType{entity:e, Name: name, fields: fields}
+	return EntityType{entity: e, Name: name, fields: fields}
 }
 
 func (t *EntityType) equals(c *EntityType) bool {
 	return t.Name == c.Name && t.entity.Equals(c.entity)
 }
 
-func (t *EntityType) hasFields(field *Field)  bool{
+func (t *EntityType) hasFields(field *Field) bool {
 	for _, f := range t.fields {
 		if f.Equals(field) {
 			return true

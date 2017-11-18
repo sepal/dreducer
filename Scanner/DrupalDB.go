@@ -142,3 +142,13 @@ func (d *DrupalDB) GetEntityType(entity, bundle string) (*models.EntityType, boo
 	t, exists := e.GetType(bundle)
 	return t, exists
 }
+
+func (d *DrupalDB) All() ([]*models.Entity) {
+	entities := make([]*models.Entity, len(d.entities))
+	i := 0
+	for _, e := range d.entities {
+		entities[i] = e
+		i++
+	}
+	return entities
+}
