@@ -21,15 +21,11 @@ func main() {
 		printError(err)
 	}
 
-	api.InitServer(&db)
-
-	//name := "profile2"
+	//err = api.UpdateSchema(&db)
 	//
-	//entity, exists := db.GetEntity(name)
-	////entity, exists := db.GetEntityType(name, "resume")
-	//if !exists {
-	//	fmt.Printf("entity %s does not exist.\n", name)
-	//	os.Exit(1)
+	//if err != nil {
+	//	printError(err)
 	//}
-	//entity.Show()
+
+	api.InitServer(&db)
 }
