@@ -36,8 +36,8 @@ func (t *EntityType) Show() {
 	println("Fields: ")
 	for _, f := range t.Fields {
 		println("- " + f.Name)
-		if f.entityRef != nil {
-			for _, ef := range f.entityRef.Fields {
+		if f.Fields != nil {
+			for _, ef := range f.Fields {
 				println("  - " + ef.Name)
 			}
 		}

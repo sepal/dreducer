@@ -117,7 +117,7 @@ func (d *DrupalDB) scanForFC() {
 	if exists {
 		for _, t := range e.Types {
 			f, _ := d.fields[t.Name]
-			f.SetEntityTypeRef(t)
+			f.SetFieldCollection(t)
 		}
 	}
 }

@@ -5,16 +5,17 @@ type Field struct {
 	table     string
 	Name      string        `json:"name"`
 	entities  []*EntityType `json:"entities"`
-	entityRef *EntityType
+	Fields    []*Field	    `json:"fields"`
 }
 
 func CreateField(field_table string) Field {
 	entities := make([]*EntityType, 0)
+	fields := make([]*Field, 0)
 
 	// The Name of a field is the Fields Name without the field_data_ prefix.
 	name := field_table[11:]
 
-	return Field{table: field_table, Name: name, entities: entities}
+	return Field{table: field_table, Name: name, entities: entities, Fields:fields}
 }
 
 func (field *Field) HasEntityType(t *EntityType) bool {
@@ -47,6 +48,6 @@ func (field *Field) Equals(compare *Field) bool {
 	return field.table == compare.table
 }
 
-func (f *Field) SetEntityTypeRef(t *EntityType)  {
-	f.entityRef = t
+func (f *Field) SetFieldCollection(t *EntityType)  {
+	f.Fields = t.Fields
 }

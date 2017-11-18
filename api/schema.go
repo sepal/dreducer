@@ -6,12 +6,20 @@ import (
 	"github.com/sepal/dreducer/Scanner"
 )
 
-var entityType, bundleType, fieldType *graphql.Object
+var entityType, bundleType, fieldType, fieldFieldType *graphql.Object
 var queryType *graphql.Object
 var Schema graphql.Schema
 
-
 func setupSchema(db *Scanner.DrupalDB) {
+	fieldFieldType  = graphql.NewObject(graphql.ObjectConfig{
+		Name: "FieldField",
+		Fields: graphql.Fields{
+			"id": relay.GlobalIDField("FieldField", nil),
+			"name": &graphql.Field{
+				Type: graphql.String,
+			},
+		},
+	})
 
 	fieldType = graphql.NewObject(graphql.ObjectConfig{
 		Name: "Field",
@@ -19,6 +27,11 @@ func setupSchema(db *Scanner.DrupalDB) {
 			"id": relay.GlobalIDField("Field", nil),
 			"name": &graphql.Field{
 				Type: graphql.String,
+			},
+			"fields": &graphql.Field{
+				Type: &graphql.List{
+					OfType: fieldFieldType,
+				},
 			},
 		},
 	})
@@ -39,7 +52,7 @@ func setupSchema(db *Scanner.DrupalDB) {
 	})
 
 	entityType = graphql.NewObject(graphql.ObjectConfig{
-		Name: "entity",
+		Name:        "entity",
 		Description: "A drupal entity.",
 		Fields: graphql.Fields{
 			"id": relay.GlobalIDField("entity", nil),
@@ -48,12 +61,12 @@ func setupSchema(db *Scanner.DrupalDB) {
 			},
 			"types": &graphql.Field{
 				Type: &graphql.List{
-					OfType:bundleType,
+					OfType: bundleType,
 				},
 			},
 			"fields": &graphql.Field{
 				Type: &graphql.List{
-					OfType:fieldType,
+					OfType: fieldType,
 				},
 			},
 		},
