@@ -30,7 +30,11 @@ func CreateDrupalDB(database, host, user, password string) (DrupalDB, error) {
 	drupal.entities = make(map[string]*models.Entity)
 	drupal.fields = make(map[string]*models.Field)
 
+	// Scan for all tables.
 	drupal.scanTables()
+
+	// Set the correct entity ref to all field collection fields.
+	drupal.scanForFC()
 
 	return drupal, nil
 }
@@ -104,8 +108,18 @@ func (d *DrupalDB) scanField(table string) error {
 
 		d.entities[entity_type] = entity
 	}
-	d.fields[table] = field
+	d.fields[field.Name] = field
 	return nil
+}
+
+func (d *DrupalDB) scanForFC() {
+	e, exists := d.GetEntity("field_collection_item")
+	if exists {
+		for _, t := range e.Types {
+			f, _ := d.fields[t.Name]
+			f.EntityRef = t
+		}
+	}
 }
 
 func (d *DrupalDB) GetField(name string) (*models.Field, bool) {
@@ -116,4 +130,15 @@ func (d *DrupalDB) GetField(name string) (*models.Field, bool) {
 func (d *DrupalDB) GetEntity(name string) (*models.Entity, bool) {
 	e, exists := d.entities[name]
 	return e, exists
+}
+
+func (d *DrupalDB) GetEntityType(entity, bundle string) (*models.EntityType, bool) {
+	e, exists := d.GetEntity(entity)
+
+	if !exists {
+		return nil, false
+	}
+
+	t, exists := e.GetType(bundle)
+	return t, exists
 }

@@ -20,8 +20,10 @@ func main() {
 		printError(err)
 	}
 
-	name := "node"
+	name := "profile2"
+
 	entity, exists := db.GetEntity(name)
+	//entity, exists := db.GetEntityType(name, "resume")
 	if !exists {
 		fmt.Printf("Entity %s does not exist.\n", name)
 		os.Exit(1)

@@ -1,21 +1,21 @@
 package models
 
 type Entity struct {
-	table  string
-	types  []*EntityType
-	fields []*Field
+	Name   string
+	Types  []*EntityType
+	Fields []*Field
 }
 
 
 func CreateEntity(entity_name string) Entity {
 	bundles := make([]*EntityType, 0)
 	fields := make([]*Field, 0)
-	return Entity{table: entity_name, types: bundles, fields: fields}
+	return Entity{Name: entity_name, Types: bundles, Fields: fields}
 }
 
 func (entity *Entity) HasType(name string) bool {
-	for _, v := range entity.types {
-		if v.name == name {
+	for _, v := range entity.Types {
+		if v.Name == name {
 			return true
 		}
 	}
@@ -25,13 +25,13 @@ func (entity *Entity) HasType(name string) bool {
 func (entity *Entity) AddType(name string) {
 	if !entity.HasType(name) {
 		t := CreateEntityType(entity, name)
-		entity.types = append(entity.types, &t)
+		entity.Types = append(entity.Types, &t)
 	}
 }
 
 func (e *Entity) GetType(name string) (*EntityType, bool) {
-	for _, t := range e.types {
-		if t.name == name {
+	for _, t := range e.Types {
+		if t.Name == name {
 			return t, true
 		}
 	}
@@ -39,7 +39,7 @@ func (e *Entity) GetType(name string) (*EntityType, bool) {
 }
 
 func (entity *Entity) HasField(field *Field) bool {
-	for _, v := range entity.fields {
+	for _, v := range entity.Fields {
 		if v.Equals(field) {
 			return true
 		}
@@ -49,22 +49,27 @@ func (entity *Entity) HasField(field *Field) bool {
 
 func (entity *Entity) AddField(field *Field, name string) {
 	if !entity.HasField(field) {
-		entity.fields = append(entity.fields, field)
+		entity.Fields = append(entity.Fields, field)
 	}
 	t, _ := entity.GetType(name)
 	t.addField(field)
 }
 
 func (entity *Entity) Show() {
-	println("Entity: " + entity.table)
+	println("Entity: " + entity.Name)
 	println("---")
-	println("types:")
-	for _, t := range entity.types {
-		println("- " + t.name)
+	println("Types:")
+	for _, t := range entity.Types {
+		println("- " + t.Name)
 		if len(t.fields) > 0 {
-			println("  fields:")
+			println("  Fields:")
 			for _, f := range t.fields {
-				println("  - " + f.name)
+				println("  - " + f.Name)
+				if f.EntityRef != nil {
+					for _, ef := range f.EntityRef.fields {
+						println("    - " + ef.Name)
+					}
+				}
 			}
 		}
 	}
@@ -72,5 +77,5 @@ func (entity *Entity) Show() {
 }
 
 func (entity *Entity) Equals(compare *Entity) bool {
-	return entity.table == compare.table
+	return entity.Name == compare.Name
 }

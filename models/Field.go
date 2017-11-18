@@ -1,23 +1,24 @@
 package models
 
-// Entity fields
+// Entity Fields
 type Field struct {
-	table    string
-	name     string
-	entities []*EntityType
+	table     string
+	Name      string
+	Entities  []*EntityType
+	EntityRef *EntityType
 }
 
 func CreateField(field_table string) Field {
 	entities := make([]*EntityType, 0)
 
-	// The name of a field is the fields table without the field_data_ prefix.
+	// The Name of a field is the Fields Name without the field_data_ prefix.
 	name := field_table[11:]
 
-	return Field{table: field_table, name: name, entities: entities}
+	return Field{table: field_table, Name: name, Entities: entities}
 }
 
 func (field *Field) HasEntityType(t *EntityType) bool {
-	for _, e := range field.entities {
+	for _, e := range field.Entities {
 		if e.equals(t) {
 			return true
 		}
@@ -27,16 +28,16 @@ func (field *Field) HasEntityType(t *EntityType) bool {
 
 func (field *Field) AddEntityType(t *EntityType) {
 	if !field.HasEntityType(t) {
-		field.entities = append(field.entities, t)
+		field.Entities = append(field.Entities, t)
 	}
 }
 
 func (field *Field) Show() {
-	println("Field: " + field.name)
+	println("Field: " + field.Name)
 	println("---")
 	println("Belongs to:")
-	for _, entity := range field.entities {
-		println("- " + entity.entity.table + ":" + entity.name)
+	for _, entity := range field.Entities {
+		println("- " + entity.entity.Name + ":" + entity.Name)
 
 	}
 	println("")
