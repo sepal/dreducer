@@ -10,7 +10,7 @@ import registerServiceWorker from './registerServiceWorker';
 
 const client = new ApolloClient({
   link: new HttpLink({uri: '/graphql'}),
-  cache: new InMemoryCache().restore({})
+  cache: new InMemoryCache()
 });
 
 ReactDOM.render(
