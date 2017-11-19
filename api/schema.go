@@ -6,6 +6,7 @@ import (
 	"github.com/sepal/dreducer/Scanner"
 	"github.com/sepal/dreducer/models"
 	"golang.org/x/net/context"
+	"errors"
 )
 
 var entityType, bundleType, fieldType, fieldFieldType *graphql.Object
@@ -47,8 +48,12 @@ func setupSchema(db *Scanner.DrupalDB) {
 		Name: "EntityType",
 		Fields: graphql.Fields{
 			"id": relay.GlobalIDField("EntityType", tableId),
-			"name": &graphql.Field{
+			"type": &graphql.Field{
 				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					t := p.Source.(*models.EntityType)
+					return t.Name, nil
+				},
 			},
 			"fields": &graphql.Field{
 				Type: &graphql.List{
@@ -121,6 +126,38 @@ func setupSchema(db *Scanner.DrupalDB) {
 
 					e := db.All()
 					return e, nil
+				},
+			},
+			"entityType": &graphql.Field{
+				Type: bundleType,
+				Args: graphql.FieldConfigArgument{
+					"entity": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"type": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					e, exists := p.Args["entity"].(string)
+
+					if !exists {
+						return nil, errors.New("missing entity name argument")
+					}
+
+					b, exists := p.Args["type"].(string)
+
+					if !exists {
+						return nil, errors.New("missing entity type name argument")
+					}
+
+					t, exists := db.GetEntityType(e, b)
+
+					if !exists {
+						return nil, errors.New("entity type not found")
+					}
+
+					return t, nil
 				},
 			},
 		},

@@ -9,7 +9,7 @@ const ENTITIES_QUERY = gql`query root {
     name 
     types {
       id
-      name
+      type
     }
   }
 }`;
@@ -23,7 +23,7 @@ function EntityListening(props) {
   }
 
   return props.entities.map((entity) => {
-    const types = entity.types.map(et => <li key={et.id}><a href="">{et.name}</a></li>);
+    const types = entity.types.map(et => <li key={et.id}><a href="">{et.type}</a></li>);
 
     return (<li key={entity.id}>
       <a href="/">{entity.name}</a>
