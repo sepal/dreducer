@@ -5,7 +5,7 @@ import {HttpLink, InMemoryCache} from 'apollo-client-preset'
 import {ApolloProvider} from 'react-apollo'
 
 import './index.css';
-import App from './App';
+import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 
 const client = new ApolloClient({
