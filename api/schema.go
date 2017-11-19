@@ -70,6 +70,24 @@ func setupSchema(db *Scanner.DrupalDB) {
 				Type: &graphql.List{
 					OfType: bundleType,
 				},
+				Args: graphql.FieldConfigArgument{
+					"type": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					e := p.Source.(*models.Entity)
+					bundle, exists := p.Args["type"].(string)
+
+					if exists {
+						t, _ := e.GetType(bundle)
+						types := make([]*models.EntityType, 1)
+						types[0] = t
+						return types, nil
+					}
+
+					return e.Types, nil
+				},
 			},
 			"fields": &graphql.Field{
 				Type: &graphql.List{
