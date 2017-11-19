@@ -1,8 +1,28 @@
+html {
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
 
 .header {
   background-color: #222;
-  padding: 20px;
   color: white;
+  height: 5rem;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 3rem;
+  padding: 1rem;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.75rem;
+  line-height: 3rem;
 }
 
 ul {
@@ -11,4 +31,13 @@ ul {
 
 ul {
   list-style: none;
+}
+
+path {
+  stroke: #bf8a18;
+  stroke-width: 10px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 1px, 15px;
+  fill: #F4AF20;
 }

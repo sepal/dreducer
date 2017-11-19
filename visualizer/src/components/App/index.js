@@ -5,6 +5,7 @@ import {
 } from 'react-router-dom';
 import './App.css';
 import EntitySelector from "../Entities/EntitySelector";
+import EntityGraph from '../Entities/EntityGraph';
 
 
 class App extends Component {
@@ -16,7 +17,10 @@ class App extends Component {
             <h1>DReducer Inspector</h1>
           </header>
 
-          <Route exact path="/" component={EntitySelector}/>
+          <main>
+            <Route exact path="/" component={EntitySelector} />
+            <Route path="/entity/:entity/:type" component={EntityGraph} />
+          </main>
         </div>
       </Router>
     );

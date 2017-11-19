@@ -1,6 +1,7 @@
 import React from 'react';
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import {Link} from 'react-router-dom';
 import List from "../List";
 
 const ENTITIES_QUERY = gql`query root { 
@@ -23,10 +24,12 @@ function EntityListening(props) {
   }
 
   return props.entities.map((entity) => {
-    const types = entity.types.map(et => <li key={et.id}><a href="">{et.type}</a></li>);
-
+    const types = entity.types.map(et => <li key={et.id}>
+        <Link to={`entity/${entity.name}/${et.type}`}>{et.type}</Link>
+      </li>
+    );
     return (<li key={entity.id}>
-      <a href="/">{entity.name}</a>
+      <h3>{entity.name}:</h3>
       <List>
         {types}
       </List>
