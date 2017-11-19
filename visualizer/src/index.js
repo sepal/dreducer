@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ApolloClient from 'apollo-client'
-import {HttpLink, InMemoryCache} from 'apollo-client-preset'
-import {ApolloProvider} from 'react-apollo'
-
+import ApolloClient from 'apollo-client';
+import {HttpLink, InMemoryCache} from 'apollo-client-preset';
+import {ApolloProvider} from 'react-apollo';
 import './index.css';
 import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
