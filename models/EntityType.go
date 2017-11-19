@@ -47,3 +47,6 @@ func (t *EntityType) Show() {
 		}
 	}
 }
+func (t *EntityType) GetEntity() *Entity  {
+	return t.entity;
+}

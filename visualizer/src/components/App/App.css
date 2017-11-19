@@ -34,10 +34,6 @@ ul {
 }
 
 path {
-  stroke: #bf8a18;
-  stroke-width: 10px;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  stroke-dasharray: 1px, 15px;
-  fill: #F4AF20;
+  stroke: #f0f0f0;
+  stroke-width: 1px;
 }

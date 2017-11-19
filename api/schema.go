@@ -48,6 +48,13 @@ func setupSchema(db *Scanner.DrupalDB) {
 		Name: "EntityType",
 		Fields: graphql.Fields{
 			"id": relay.GlobalIDField("EntityType", tableId),
+			"entity": &graphql.Field{
+				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					t := p.Source.(*models.EntityType)
+					return t.GetEntity().GetName(), nil
+				},
+			},
 			"type": &graphql.Field{
 				Type: graphql.String,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
