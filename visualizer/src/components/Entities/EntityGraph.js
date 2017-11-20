@@ -17,6 +17,33 @@ const ENTITY_TYPE_QUERY = gql`
   }
 `;
 
+function FieldList({fields, midX, midY, rh, rv}) {
+  if (fields == undefined) {
+    return (
+      <g></g>
+    );
+  }
+
+  const phi = ( Math.PI) / fields.length;
+
+  return fields.map((field, i) => {
+    const x = midX + rh * Math.cos(phi*i);
+    const y = midY + rv * Math.sin(phi*i);
+
+    const sub_fields = (
+      <FieldList fields={field.fields} midX={x} midY={y} rh={180} rv={180}/>
+    );
+
+    return (
+      <g key={i} className="field">
+        {sub_fields}
+        <path d={`M ${midX} ${midY} L ${x} ${y}`} />
+        <text textAnchor="middle" x={x} y={y}>{field.name}</text>
+      </g>
+    );
+  });
+}
+
 function EntityGraph({loading, entityType}) {
   if (loading) {
     return (
@@ -28,29 +55,9 @@ function EntityGraph({loading, entityType}) {
 
   const w = window.innerWidth;
   const h = window.innerHeight - 75;
-  const aspectRation = w / h;
-
   const midX = w / 2;
-  const midY = h / 2;
-
-  const phi = (2 * Math.PI) /  entityType.fields.length;
-
-
-  const fields = entityType.fields.map((field, i) => {
-    const x = midX + w * 0.35 * Math.cos(phi*i);
-    const y = midY + h * 0.35 * Math.sin(phi*i);
-    return (
-      <text textAnchor="middle" key={i} x={x} y={y}>{field.name}</text>
-    );
-  });
-
-  const lines =  entityType.fields.map((field, i) => {
-    const x = midX + w * 0.35 * Math.cos(phi*i);
-    const y = midY + h * 0.35 * Math.sin(phi*i);
-    return (
-      <path d={`M ${midX} ${midY} L ${x} ${y}`} />
-    );
-  });
+  const midY = 20;
+  const fields = <FieldList fields={entityType.fields} midX={midX} midY={midY} rh={w*0.35} rv={h*0.35} />;
 
   return (
     <div className="scaling-svg-container">
@@ -60,9 +67,8 @@ function EntityGraph({loading, entityType}) {
            height={`${h}px`}
            viewBox={`0 0 ${w} ${h}`}
            preserveAspectRatio="none">
-
-        {lines}
         {fields}
+
 
         <text textAnchor="middle"
               x={midX}

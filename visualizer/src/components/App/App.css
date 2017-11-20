@@ -34,6 +34,28 @@ ul {
 }
 
 path {
-  stroke: #f0f0f0;
+  stroke: #ddd;
   stroke-width: 1px;
+}
+
+.field {
+  opacity: 0.25;
+  fill: white;
+}
+
+.field text {
+  fill: black;
+}
+
+.field:hover {
+  opacity: 1;
+  fill: white;
+}
+
+.field .field {
+  opacity: 0.1;
+}
+
+.field .field:hover {
+  opacity: 1;
 }
